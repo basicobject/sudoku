@@ -42,7 +42,7 @@ export class Sudoku {
     }
 
     initGrid(): void {
-        let fillRate: number = 100
+        let fillRate = 100
 
         if (this.difficulty === "easy") fillRate = 90;
         else if (this.difficulty === "medium") fillRate = 80;
@@ -59,8 +59,8 @@ export class Sudoku {
         indices = this.shuffle(indices);
 
         indices.forEach((pair) => {
-            let i = pair[0]
-            let j = pair[1]
+            const i = pair[0]
+            const j = pair[1]
 
             const r: number = Math.round(Math.random() * 100)
             let fillValue: number | null = Math.round(Math.random() * 10) % 10
@@ -124,7 +124,7 @@ export class Sudoku {
         }
     }
 
-    validateRow(i: Indexes, j: Indexes, mark: boolean = false): boolean {
+    validateRow(i: Indexes, j: Indexes, mark = false): boolean {
         const v = this.grid[i][j].value
         let valid = true
 
@@ -142,7 +142,7 @@ export class Sudoku {
         return valid;
     }
 
-    validateColumn(i: Indexes, j: Indexes, mark: boolean = false): boolean {
+    validateColumn(i: Indexes, j: Indexes, mark = false): boolean {
         const v = this.grid[i][j].value
         let valid = true
 
@@ -160,16 +160,16 @@ export class Sudoku {
         return valid;
     }
 
-    validateSquare(i: Indexes, j: Indexes, mark: boolean = false): boolean {
+    validateSquare(i: Indexes, j: Indexes, mark = false): boolean {
         const v = this.grid[i][j].value
         let valid = true
-        let p0 = Math.floor(i / 3) * 3 ;
-        let q0 = Math.floor(j / 3) * 3 ;
+        const p0 = Math.floor(i / 3) * 3 ;
+        const q0 = Math.floor(j / 3) * 3 ;
 
         for (let p = 0; p < 3; p++) {
-            let px = p0 + p
+            const px = p0 + p
             for (let q = 0; q < 3; q++) {
-                let qx = q0 + q
+                const qx = q0 + q
                 if((px !== i) && (qx !== j) && (this.grid[px][qx].value === v)) {
                     valid = false
                     mark && this.markAsIllegal(px, qx)
