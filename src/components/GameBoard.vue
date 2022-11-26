@@ -2,7 +2,7 @@
     <div class="-mt-[120px] w-fit mx-auto border rounded-lg overflow-hidden border-grid-gray">
         <div class="flex basis-9 justify-center bg-th-white" v-for="row in gameGrid.grid">
             <div v-for="cell in row">
-                <SingleCell :x="cell.x" :y="cell.y" :value="cell.value" :original="cell.original" :highlight="cell.highlight"
+                <SingleCell :x="cell.x" :y="cell.y" :value="cell.value" :original="cell.original" :highlight="cell.highlight" :illegal="cell.illegal"
                     @change-digit="handleChangeDigit"
                     @set-highlight="setHighlight"
                     @unset-highlight="unsetHighlight"
@@ -11,8 +11,8 @@
         </div>
     </div>
     <div class="flex gap-4 pt-14 justify-center">
-        <button class="inline-block border-2 border-primary text-primary rounded-3xl px-8 py-2 hover:bg-primary hover:text-th-white font-semibold tracking-wide text-center" @click="restartGame">Restart</button>
-        <button class="inline-block border-2 border-primary text-primary rounded-3xl px-8 py-2 hover:bg-primary hover:text-th-white font-semibold tracking-wide text-center" @click="stopGame"> Stop </button>
+        <DefaultButton @click="restartGame">Restart</DefaultButton>
+        <DefaultButton @click="stopGame">Stop</DefaultButton>
     </div>
 </template>
 
@@ -20,7 +20,8 @@
     import { Sudoku } from "../composables/SudokuGame";
     import { ref } from "vue";
     import SingleCell from "./SingleCell.vue";
-import router from "../router";
+    import DefaultButton from "./DefaultButton.vue";
+    import router from "../router";
 
     interface gameProps {
         quit: boolean,
@@ -33,6 +34,7 @@ import router from "../router";
 
     const handleChangeDigit = (digit: number, x: number, y: number) => {
         gameGrid.value.setCell(x, y, digit)
+        gameGrid.value.validate()
     }
 
     const setHighlight = (i: number, j: number) => {
@@ -46,7 +48,11 @@ import router from "../router";
     }
 
     const restartGame = () => {
-        confirm("Do you want to restart the game?")
+        const yes = confirm("Do you want to restart the game?")
+        if(yes) {
+            console.log("Resetting the game")
+            gameGrid.value.reset()
+        }
     }
 
     const stopGame = () => {
@@ -55,6 +61,5 @@ import router from "../router";
             router.push({ name: 'HomePage'})
         }
     }
-
 
 </script>

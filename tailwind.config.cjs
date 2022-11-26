@@ -14,7 +14,8 @@ module.exports = {
       'th-white': "#FFFFFF",
       'th-black': "#4E596B",
       'th-gray': "#F4F6FF",
-      'grid-gray': "#D7E1F4"
+      'grid-gray': "#D7E1F4",
+      'th-danger': "#BD1C4D",
     },
     fontFamily: {
       sans: ["Inter", ...defaultTheme.fontFamily.sans],

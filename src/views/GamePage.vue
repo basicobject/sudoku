@@ -15,6 +15,4 @@
 import MainLayout from "../layouts/MainLayout.vue"
 import GameBoard from "../components/GameBoard.vue";
 
-// const restart = ref(false)
-// const stop = ref(false)
 </script>

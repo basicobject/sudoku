@@ -43,7 +43,9 @@
             </div>
         </section>
         <section class="text-center">
-            <RouterLink :to="{ name: 'GamePage' }" class="inline-block border-2 border-primary text-primary rounded-3xl w-28 py-2 hover:bg-primary hover:text-th-white font-semibold tracking-wide text-center">PLAY</RouterLink>
+            <RouterLink :to="{ name: 'GamePage' }">
+                <DefaultButton>PLAY</DefaultButton>
+            </RouterLink>
         </section>
     </MainLayout>
 </template>
@@ -51,4 +53,5 @@
 <script setup lang="ts">
     import MainLayout from "../layouts/MainLayout.vue"
     import { RouterLink } from "vue-router";
+    import DefaultButton from "../components/DefaultButton.vue";
 </script>

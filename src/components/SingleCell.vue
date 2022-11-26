@@ -1,6 +1,6 @@
 <template>
-    <div class="flex border border-grid-gray w-10 h-10 justify-center items-center font-normal text-2xl"
-            :class="{ 'text-th-black' : original, 'text-primary': !original, 'border-r-2': rightBoundary, 'border-b-2': bottomBoundary, 'bg-th-gray': highlight}"
+    <div class="flex border border-th-gray w-10 h-10 justify-center items-center font-normal text-2xl outline-none"
+            :class="{ 'text-th-black' : original, 'text-primary': !original, 'border-r-2': rightBoundary, 'border-b-2': bottomBoundary, 'bg-th-gray': highlight, 'text-th-danger': illegal}"
             tabindex="0"
         @click.stop="handleClick"
         @mouseout.stop="handleMouseOut"
@@ -20,7 +20,7 @@
         x: number,
         y: number,
         highlight: boolean,
-        illegal?: boolean,
+        illegal: boolean,
         original: boolean
     }
 
