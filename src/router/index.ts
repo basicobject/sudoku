@@ -21,7 +21,7 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(import.meta.BASE_URL),
+    history: createWebHistory(import.meta.BASE_URL as string),
     routes
 });
 
