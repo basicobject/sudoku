@@ -15,38 +15,22 @@ export type Grid = Cell[][];
 
 type Difficulty = "easy" | "medium" | "hard"
 
-function newGrid(): Grid {
-    const grid = Array(9).fill(null).map((_, i) => Array(9).fill(null).map((_, j) => {
-        return {
-            value: null,
-            highlight: false,
-            illegal: false,
-            possibles: [],
-            x: i,
-            y: j,
-            original: false
-        } as Cell;
-    }))
-
-    return grid;
-}
-
 export class Sudoku {
     readonly difficulty: Difficulty
     readonly grid: Grid
 
     constructor(difficulty: Difficulty) {
         this.difficulty = difficulty
-        this.grid = newGrid()
+        this.grid = this.newEmptyGrid()
         this.initGrid()
     }
 
-    initGrid(): void {
-        let fillRate = 100
+    private initGrid(): void {
+        let fillRate: number
 
-        if (this.difficulty === "easy") fillRate = 90;
-        else if (this.difficulty === "medium") fillRate = 80;
-        else fillRate = 70;
+        if (this.difficulty === "easy") fillRate = 90
+        else if (this.difficulty === "medium") fillRate = 80
+        else fillRate = 70
 
         let indices = []
 
@@ -56,36 +40,43 @@ export class Sudoku {
             }
         }
 
-        indices = this.shuffle(indices);
+        indices = this.shuffle(indices)
+        const adder = Math.floor(Math.random() * 1000)
 
         indices.forEach((pair) => {
             const i = pair[0]
             const j = pair[1]
 
-            const r: number = Math.round(Math.random() * 100)
-            let fillValue: number | null = Math.round(Math.random() * 10) % 10
+            const r: number = Math.floor(Math.random() * 100)
 
-            if (fillValue === 0) {
-                fillValue = null
-            }
-
-            if ((r < fillRate) && (r > 0)) {
-                // set cell
-                this.grid[i][j].value = fillValue as Coin
+            if (r < fillRate) {
+                // set cell as original value
+                this.fillCell(i, j, adder);
                 this.grid[i][j].original = true
-
-                const valid = this.validateRow(i, j) && this.validateColumn(i, j) && this.validateSquare(i,j)
-                // unset if invalid
-                if(!valid) {
-                    this.grid[i][j].value = null as Coin
-                    this.grid[i][j].original = false
-                }
             }
         });
+
+        this.reset();
+    }
+
+    // contains recursion and a possible infinite loop
+    private fillCell(i: Indexes, j: Indexes, adder: number): void {
+        this.grid[i][j].value = this.digitSum((this.grid[i][j].value as number) + adder)
     }
 
     setCell(i: Indexes, j: Indexes, digit: Coin) {
         this.grid[i][j].value = digit
+    }
+
+    private digitSum(num: number): Coin {
+        let sum = 0
+        while(num > 0) {
+            sum += num % 10
+            num = Math.floor(num / 10)
+        }
+
+        if (sum > 9) return this.digitSum(sum)
+        else return sum as Coin;
     }
 
     markRowsAndCols(flag: boolean, i: Indexes, j: Indexes) {
@@ -109,9 +100,7 @@ export class Sudoku {
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
                 this.grid[i][j].illegal = false
-                if(!this.grid[i][j].value) {
-                    console.log("Please fill the grid")
-                } else {
+                if(this.grid[i][j].value) {
                     (this.validateRow(i, j, true) && this.validateColumn(i, j, true) && this.validateSquare(i, j, true))
                 }
             }
@@ -124,7 +113,7 @@ export class Sudoku {
         }
     }
 
-    validateRow(i: Indexes, j: Indexes, mark = false): boolean {
+    private validateRow(i: Indexes, j: Indexes, mark = false): boolean {
         const v = this.grid[i][j].value
         let valid = true
 
@@ -142,7 +131,7 @@ export class Sudoku {
         return valid;
     }
 
-    validateColumn(i: Indexes, j: Indexes, mark = false): boolean {
+    private validateColumn(i: Indexes, j: Indexes, mark = false): boolean {
         const v = this.grid[i][j].value
         let valid = true
 
@@ -160,7 +149,7 @@ export class Sudoku {
         return valid;
     }
 
-    validateSquare(i: Indexes, j: Indexes, mark = false): boolean {
+    private validateSquare(i: Indexes, j: Indexes, mark = false): boolean {
         const v = this.grid[i][j].value
         let valid = true
         const p0 = Math.floor(i / 3) * 3 ;
@@ -202,5 +191,39 @@ export class Sudoku {
         }
 
         return array;
+    }
+
+    private newEmptyGrid(): Grid {
+        const SeedSolution = [
+            [4,3,5, 2,6,9, 7,8,1],
+            [6,8,2, 5,7,1, 4,9,3],
+            [1,9,7, 8,3,4, 5,6,2],
+            [8,2,6, 1,9,5, 3,4,7],
+            [3,7,4, 6,8,2, 9,1,5],
+            [9,5,1, 7,4,3, 6,2,8],
+            [5,1,9, 3,2,6, 8,7,4],
+            [2,4,8, 9,5,7, 1,3,6],
+            [7,6,3, 4,1,8, 2,5,9]
+        ]
+        const grid = Array(9)
+            .fill(null)
+            .map((_, i) =>
+                Array(9)
+                    .fill(null)
+                    .map((_, j) => {
+                        return {
+                            value: SeedSolution[i][j] as Coin,
+                            highlight: false,
+                            illegal: false,
+                            possibles: [],
+                            x: i,
+                            y: j,
+                            original: false
+                        } as Cell;
+                    }
+                )
+            )
+
+        return grid;
     }
 }

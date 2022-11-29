@@ -38,19 +38,16 @@
     }
 
     const setHighlight = (i: number, j: number) => {
-        console.log("Running highlight")
         gameGrid.value.markRowsAndCols(true, i, j)
     }
 
     const unsetHighlight = (i: number, j: number) => {
-        console.log("Removing highlight")
         gameGrid.value.markRowsAndCols(false, i, j)
     }
 
     const restartGame = () => {
         const yes = confirm("Do you want to restart the game?")
         if(yes) {
-            console.log("Resetting the game")
             gameGrid.value.reset()
         }
     }
