@@ -34,7 +34,10 @@
 
     const handleChangeDigit = (digit: number, x: number, y: number) => {
         gameGrid.value.setCell(x, y, digit)
-        gameGrid.value.validate()
+        const completed = gameGrid.value.validate()
+        if (completed) {
+            alert("Congratulation!")
+        }
     }
 
     const setHighlight = (i: number, j: number) => {

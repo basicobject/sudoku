@@ -96,15 +96,21 @@ export class Sudoku {
         }
     }
 
-    validate(): void {
+    validate(): boolean {
+        let solved = true
+
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
                 this.grid[i][j].illegal = false
-                if(this.grid[i][j].value) {
+                if (this.grid[i][j].value) {
                     (this.validateRow(i, j, true) && this.validateColumn(i, j, true) && this.validateSquare(i, j, true))
+                } else {
+                    solved = false
                 }
             }
         }
+
+        return solved;
     }
 
     private markAsIllegal(i: Indexes, j: Indexes): void {
