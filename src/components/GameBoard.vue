@@ -3,7 +3,7 @@
         <div class="outline-none -mt-[120px] w-fit mx-auto border rounded-lg overflow-hidden border-grid-gray" @keyup.stop="catchDigit" tabindex="0">
             <div class="flex basis-9 justify-center bg-th-white" v-for="row in gameGrid.grid">
                 <div v-for="cell in row">
-                    <SingleCell :x="cell.x" :y="cell.y" :value="cell.value" :original="cell.original" :highlight="cell.highlight" :illegal="cell.illegal" :focus="cell.focus" :possibles="possiblesAsStr(cell.possibles)"
+                    <SingleCell :x="cell.x" :y="cell.y" :value="cell.value" :original="cell.original" :highlight="cell.highlight" :illegal="cell.illegal" :selected="cell.selected" :possibles="possiblesAsStr(cell.possibles)"
                         @set-highlight="setHighlight"
                         @unset-highlight="unsetHighlight"
                         />
@@ -47,8 +47,9 @@
         }
     }
 
-    const setHighlight = (i: number, j: number) => {
-        gameGrid.value.setFocus(i, j)
+    const setHighlight = (i: number, j: number, multiSelect: boolean) => {
+        if(!multiSelect) gameGrid.value.clearSelected()
+        gameGrid.value.setSelection(i, j)
         gameGrid.value.markRowsAndCols(true, i, j)
     }
 
@@ -71,25 +72,24 @@
     }
 
     const clearFocus = () => {
-        gameGrid.value.clearFocus()
+        gameGrid.value.clearSelected()
     }
 
     const catchDigit = (e: KeyboardEvent) => {
-        const digit = e.keyCode - '0'.charCodeAt(0)
-
         if(ValidKeys.includes(e.key)) {
+            const digit = e.keyCode - '0'.charCodeAt(0)
+
             if(e.ctrlKey) {
-                gameGrid.value.setPossiblesInFocus(digit)
+                gameGrid.value.setPossiblesInSelectedCells(digit)
             } else {
-                gameGrid.value.setCellsInFocus(digit);
-                validateBoard();
+                gameGrid.value.setSelectedCells(digit);
             }
 
-            setTimeout(() => gameGrid.value.clearFocus(), 500);
+            validateBoard();
         }
 
         if(e.keyCode === 27) {
-            gameGrid.value.clearFocus();
+            gameGrid.value.clearSelected();
         }
     }
 </script>

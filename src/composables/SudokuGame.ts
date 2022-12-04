@@ -9,7 +9,7 @@ export interface Cell {
   x: Indexes;
   y: Indexes;
   original: boolean;
-  focus: boolean;
+  selected: boolean;
 }
 
 export type Grid = Cell[][];
@@ -67,10 +67,10 @@ export class Sudoku {
     );
   }
 
-  setCellsInFocus(digit: Coin) {
+  setSelectedCells(digit: Coin) {
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
-        if (!this.grid[i][j].original && this.grid[i][j].focus) {
+        if (!this.grid[i][j].original && this.grid[i][j].selected) {
           this.grid[i][j].value = digit;
           this.grid[i][j].possibles = [];
         }
@@ -78,10 +78,10 @@ export class Sudoku {
     }
   }
 
-  setPossiblesInFocus(digit: Coin) {
+  setPossiblesInSelectedCells(digit: Coin) {
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
-        if (!this.grid[i][j].original && this.grid[i][j].focus) {
+        if (!this.grid[i][j].original && this.grid[i][j].selected) {
           if (!this.grid[i][j].possibles.includes(digit)) {
             this.grid[i][j].possibles.push(digit);
           } else {
@@ -107,19 +107,19 @@ export class Sudoku {
     else return sum as Coin;
   }
 
-  clearFocus() {
+  clearSelected() {
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
-        if (this.grid[i][j].focus) {
-          this.grid[i][j].focus = false;
+        if (this.grid[i][j].selected) {
+          this.grid[i][j].selected = false;
         }
       }
     }
   }
 
-  setFocus(i: Indexes, j: Indexes) {
+  setSelection(i: Indexes, j: Indexes) {
     if (!this.grid[i][j].original) {
-      this.grid[i][j].focus = true;
+      this.grid[i][j].selected = true;
     }
   }
 
@@ -277,7 +277,7 @@ export class Sudoku {
               x: i,
               y: j,
               original: false,
-              focus: false,
+              selected: false,
             } as Cell;
           })
       );
